@@ -3,7 +3,7 @@ from tkinter import *
 from tkinter import filedialog
 import pyperclip as pc
 
-Content = ""
+rawContent = ""
 
 
 def get_width(Str):
@@ -17,8 +17,8 @@ def get_width(Str):
 
 
 def translate(Title: str, Author: str):
-    global Content
-    Content = Content.split("\n")
+    global rawContent
+    Content = rawContent.split("\n")
     # print(Content)
     lines = []
     pages = []
@@ -57,15 +57,28 @@ def translate(Title: str, Author: str):
                 .replace("　", "  ")
             )
         )
-    return f'give @p written_book{{title:"{Title}",author:"{Author}",pages:{CPages}}}'
+    if var.get() == versions[1]:
+        return f'give @p written_book 1 0 {{title:"{Title}",author:"{Author}",pages:{CPages}}}'
+    elif var.get() == versions[2]:
+        return f'give @p written_book{{title:"{Title}",author:"{Author}",pages:{CPages}}}'
+    elif var.get() == versions[3]:
+        return f'give @p written_book[written_book_content={{title:"{Title}",author:"{Author}",pages:{CPages}}}]'
+    else:
+        return "unknow version!"
 
 
 root = Tk()
 root.title("文本转成书")
-root.geometry("230x240")
+root.geometry("230x270")
 
-text0 = Label(root, text="By Gufandf v0.1.0")
+text0 = Label(root, text="By Gufandf v0.1.1 for free")
 text0.pack()
+
+var = StringVar()
+versions = ("选择版本","1.12+","1.14+","24w09a+(1.20.5+)")
+versionSel = OptionMenu(root, var, *versions)
+versionSel.pack(padx=5, pady=1, fill="x")
+var.set(versions[0])
 
 text1 = Label(root, text="书名：")
 text1.pack()
@@ -79,9 +92,9 @@ AuthorInput.pack(padx=5, pady=1, fill="x")
 
 
 def selectFile():
-    global Content
+    global rawContent
     f = open(filedialog.askopenfilename(), "r", encoding="UTF-8")
-    Content = f.read()
+    rawContent = f.read()
 
 
 def outputFile():
@@ -91,7 +104,9 @@ def outputFile():
 
 
 def copy():
+    print(var.get())
     pc.copy(translate(BookNameInput.get(), AuthorInput.get()))
+    print(translate(BookNameInput.get(), AuthorInput.get()))
     print("Done")
 
 
