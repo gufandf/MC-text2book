@@ -2,7 +2,7 @@ import unicodedata
 from tkinter import *
 from tkinter import filedialog
 import pyperclip as pc
-
+#pyinstaller -F -w .\text2book.py
 rawContent = ""
 
 
